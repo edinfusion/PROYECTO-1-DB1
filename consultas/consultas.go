@@ -18,6 +18,7 @@ type Consulta1 struct {
 	Monto      string `json:"MONTO_TOTAL"`
 	No_Compras string `json:"veces_compra"`
 }
+
 type Consulta2 struct {
 	Id        int     `json:"ID"`
 	Nombre    string  `json:"NOMBRE"`
