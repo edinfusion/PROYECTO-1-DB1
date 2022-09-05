@@ -1,0 +1,56 @@
+INSERT INTO
+  proyecto1.clientes
+SELECT
+  *
+FROM
+  proyecto1.clientestemp
+
+
+--PARA ORDENES
+INSERT INTO
+  proyecto1.ordenes
+SELECT
+  proyecto1.ordenestemp.`﻿id_orden`,
+  STR_TO_DATE(proyecto1.ordenestemp.fecha_orden,'%d/%m/%Y %H:%i:%s'),
+  proyecto1.ordenestemp.id_cliente
+FROM
+  proyecto1.ordenestemp
+GROUP BY proyecto1.ordenestemp.`﻿id_orden`;
+
+--PARA DETALLE_ORDENES
+
+
+INSERT INTO proyecto1.detalle_ordenes(proyecto1.detalle_ordenes.linea_orden,
+proyecto1.detalle_ordenes.cantidad,proyecto1.detalle_ordenes.id_orden,
+proyecto1.detalle_ordenes.id_vendedor,proyecto1.detalle_ordenes.id_producto)
+SELECT 
+proyecto1.ordenestemp.linea_orden,
+proyecto1.ordenestemp.cantidad,
+proyecto1.ordenestemp.`﻿id_orden`,
+proyecto1.ordenestemp.id_vendedor,
+proyecto1.ordenestemp.id_producto
+FROM 
+proyecto1.ordenestemp;
+
+
+
+
+
+-- CONSULTA 1
+SELECT c.id_clientes AS ID,c.Nombre AS NOMBRE,c.Apellido AS APELLIDO,p.nombre AS PAIS,SUM(productos.Precio*d.cantidad) AS MONTO_TOTAL, COUNT(c.id_clientes) AS veces_compra
+FROM clientes c
+INNER JOIN ordenes o
+ON c.id_clientes = o.id_clientes
+INNER JOIN detalle_ordenes d
+ON o.id_orden = d.id_orden
+INNER JOIN productos
+ON d.id_producto = productos.id_producto
+INNER JOIN países p
+ON c.id_pais = p.id_pais
+GROUP BY c.id_clientes
+ORDER BY veces_compra DESC
+LIMIT 1;
+
+
+PARA PODER TRUNCAR
+SET FOREIGN_KEY_CHECKS = 0;
